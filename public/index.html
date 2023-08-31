@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Prediction</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <h2>Fashion Item Prediction</h2>
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <label for="imageInput">Upload your fashion item image:</label>
+    <input type="file" name="image" id="imageInput" required>
+    <input type="submit" value="Predict">
+</form>
+
+<h3>Prediction Result:</h3>
+<p id="predictionResult">Please upload an image...</p>
+
+<script>
+    $("#uploadForm").submit(function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        $.ajax({
+            url: '/predict',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.error) {
+                    $("#predictionResult").text("Error: " + response.error);
+                } else {
+                    $("#predictionResult").text("Predicted Item: " + response.prediction);
+                }
+            },
+            error: function(error) {
+                $("#predictionResult").text("An error occurred. Please try again.");
+            }
+        });
+    });
+</script>
+
+    
+</body>
+</html>
